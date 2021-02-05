@@ -12,7 +12,7 @@ namespace ConsoleUI
         static void Main(string[] args)
         {
             // RentCarContext context= new RentCarContext();
-            // context.Database.Migrate();
+            // context.Database.Migrate(); rf
             CarManager carManager = new CarManager(new EfCarDao());
             BrandManager brandManager = new BrandManager(new EfBrandDao());
             ColorManager colorManager = new ColorManager(new EfColorDao());
