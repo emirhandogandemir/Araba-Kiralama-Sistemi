@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Text;
 using System.Xml.Serialization;
 using Entities.Concrete;
+using Entities.DTOs;
 
 namespace Business.Abstract
 {
@@ -18,5 +19,6 @@ namespace Business.Abstract
        List<Car> GetAllByBrandId(int id);
        List<Car> GetByDailyPrice(decimal min, decimal max);
        List<Car> GetByModelYear(string year);
-    }
+       List<CarDetailDto> GetCarDetails();
+   }
 }

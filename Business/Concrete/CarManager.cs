@@ -4,6 +4,7 @@ using System.Text;
 using Business.Abstract;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 
 namespace Business.Concrete
 {
@@ -63,6 +64,11 @@ namespace Business.Concrete
         public List<Car> GetByModelYear(string year)
         {
             return _carDao.GetAll(car => car.ModelYear.Contains(year) == true);
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDao.GetCarDetails();
         }
 
         public void update(Car car)

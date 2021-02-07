@@ -14,9 +14,8 @@ namespace DataAccess.Concrete.EntityFramework
             optionsBuilder.UseSqlServer(@"Server=EMIRHANDGNDMR;Database=RentACar; Trusted_Connection = true");
         }
 
-        private DbSet<Car> Car { get; set; }
-        private DbSet<Color> Colors { get; set; }
-
-        private DbSet<Brand> Brands { get; set; }
+        public DbSet<Car> Car { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<Brand> Brands { get; set; }
     }
 }
