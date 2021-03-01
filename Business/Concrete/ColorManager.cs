@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 
@@ -15,32 +17,32 @@ namespace Business.Concrete
         {
             _colorDao = colorDao;
         }
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
            _colorDao.Add(color);
-           Console.WriteLine(color.ColorName+" rengi başarı ile eklenmiştir");
+         return new SuccessResult(Messages.ColorAdded);
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
            _colorDao.Delete(color);
-           Console.WriteLine(color.ColorName + "rengi başarı ile silinmiştir");
+          return new SuccessResult(Messages.ColorDeleted);
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
-            return _colorDao.GetAll();
+            return new SuccessDataResult<List<Color>>(_colorDao.GetAll()); 
         }
 
-        public Color GetById(int id)
+        public IDataResult<Color>  GetById(int id)
         {
-            return _colorDao.Get(color => color.ColorId == id);
+            return new SuccessDataResult<Color>(_colorDao.Get(color => color.ColorId == id)); ;
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
            _colorDao.Update(color);
-           Console.WriteLine(color.ColorName +" rengi başarı ile güncellenmiştir");
+          return new SuccessResult(Messages.ColorUpdated);
         }
     }
 }

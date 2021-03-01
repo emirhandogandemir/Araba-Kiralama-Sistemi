@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using System.Text;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
+using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -16,71 +23,72 @@ namespace Business.Concrete
         {
             _carDao = carDao;
         }
-        public void Add(Car car)
+
+        [SecuredOperation("car.add,admin")]
+        [ValidationAspect(typeof(CarValidator))]
+        public IResult Add(Car car)
         {
-            if (car.DailyPrice>0)
-            {
-                _carDao.Add(car);
-                Console.WriteLine(car.Descriptions + " başarı ile eklendi");
-            }
-            else
-            {
-                Console.WriteLine( "günlük fiyatınız 0 dan büyük olmalıdır sisteme girilen deger : {car.DailyPrice}" );
-            }
-           
+            _carDao.Add(car);
+            return new SuccessResult(Messages.CarAdded);
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
           _carDao.Delete(car);
-          Console.WriteLine(car.Descriptions + "başarı ile silindi");
+         return new SuccessResult(Messages.CarDeleted);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDao.GetAll();
+            if (DateTime.Now.Hour == 22)
+            {
+                return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
+            }
+
+            return new SuccessDataResult<List<Car>>(_carDao.GetAll(), Messages.CarsListed); ;
         }
 
-        public List<Car> GetAllByBrandId(int id)
+        public IDataResult<List<Car>> GetAllByBrandId(int id)
         {
-            return _carDao.GetAll(brand => brand.BrandId == id);
+            return  new SuccessDataResult<List<Car>>(_carDao.GetAll(brand => brand.BrandId == id)) ;
         }
 
-        public List<Car> GetAllByColorId(int id)
+        public IDataResult<List<Car>> GetAllByColorId(int id)
         {
-            return _carDao.GetAll(color => color.ColorId == id);
+            return new SuccessDataResult<List<Car>>(_carDao.GetAll(color => color.ColorId == id)); ;
         }
 
-        public List<Car> GetByDailyPrice(decimal min, decimal max)
+        public IDataResult<List<Car>> GetByDailyPrice(decimal min, decimal max)
         {
-            return _carDao.GetAll(car => car.DailyPrice >= min && car.DailyPrice <= max);
+            return new SuccessDataResult<List<Car>>(_carDao.GetAll(car => car.DailyPrice >= min && car.DailyPrice <= max)); ;
         }
 
-        public Car GetById(int id)
+        public IDataResult<Car>  GetById(int id)
         {
-            return _carDao.Get(car => car.CarId == id);
+            return new SuccessDataResult<Car>(_carDao.Get(car => car.CarId == id)); ;
         }
 
-        public List<Car> GetByModelYear(string year)
+        public IDataResult<List<Car>> GetByModelYear(string year)
         {
-            return _carDao.GetAll(car => car.ModelYear.Contains(year) == true);
+            return new SuccessDataResult<List<Car>>(_carDao.GetAll(car => car.ModelYear.Contains(year) == true)); ;
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDao.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails());;
         }
 
-        public void update(Car car)
+        public IResult Update(Car car)
         {
             if (car.DailyPrice > 0)
             {
                 _carDao.Update(car);
-                Console.WriteLine(car.DailyPrice + " başarı ile güncellendi");
+               return new SuccessResult(Messages.CarUpdated);
             }
             else
             {
                 Console.WriteLine($"araba güncelleme aşamasında günlük fiyat hatalı girildi . O dan büyük giriniz girdiginiz deger {car.DailyPrice}");
+                return new ErrorResult(Messages.CarPriceInValid);
             }
         }
     }
