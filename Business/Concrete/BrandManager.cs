@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 
@@ -16,45 +18,46 @@ namespace Business.Concrete
         {
             _brandDao = brandDao;
         }
-        public void Add(Brand brand)
+        public IResult Add(Brand brand)
         {
             if (brand.BrandName.Length>2)
             {
                 _brandDao.Add(brand);
-                Console.WriteLine(brand.BrandName + " Markası başarı ile eklendi");
+               return new SuccessResult(Messages.BrandAdded);
             }
             else
             {
-                Console.WriteLine($"marka ismini 2 harfden fazla giriniz {brand.BrandName}");
+               return new ErrorResult(Messages.BrandNameInValid);
             }
         }
 
-        public void Delete(Brand brand)
+        public IResult Delete(Brand brand)
         {
             _brandDao.Delete(brand);
-            Console.WriteLine(brand.BrandName +"Markası başarı ile silindi");
+            return new SuccessResult(Messages.BrandDeleted);
         }
 
-        public List<Brand> GetAll()
+        public IDataResult<List<Brand>>  GetAll()
         {
-            return _brandDao.GetAll();
+            return new SuccessDataResult<List<Brand>>(_brandDao.GetAll()); 
         }
 
-        public Brand GetById(int id)
+        public IDataResult<Brand> GetById(int id)
         {
-            return _brandDao.Get(brand => brand.BrandId == id);
+            return new SuccessDataResult<Brand>(_brandDao.Get(brand => brand.BrandId == id)); 
         }
 
-        public void Update(Brand brand)
+        public IResult Update(Brand brand)
         {
             if (brand.BrandName.Length > 2)
             {
                 _brandDao.Add(brand);
-                Console.WriteLine(brand.BrandName + " Markası başarı ile eklendi");
+               return new SuccessResult(Messages.BrandAdded);
             }
             else
             {
                 Console.WriteLine($"marka ismini 2 harfden fazla giriniz {brand.BrandName}");
+                return new ErrorResult(Messages.BrandNameInValid);
             }
         }
     }
