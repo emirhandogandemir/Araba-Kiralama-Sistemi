@@ -6,6 +6,7 @@ using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Aspects.Caching;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -26,6 +27,7 @@ namespace Business.Concrete
 
         [SecuredOperation("car.add,admin")]
         [ValidationAspect(typeof(CarValidator))]
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Add(Car car)
         {
             _carDao.Add(car);
@@ -38,6 +40,7 @@ namespace Business.Concrete
          return new SuccessResult(Messages.CarDeleted);
         }
 
+        [CacheAspect]
         public IDataResult<List<Car>> GetAll()
         {
             if (DateTime.Now.Hour == 22)
@@ -63,6 +66,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDao.GetAll(car => car.DailyPrice >= min && car.DailyPrice <= max)); ;
         }
 
+        [CacheAspect]
         public IDataResult<Car>  GetById(int id)
         {
             return new SuccessDataResult<Car>(_carDao.Get(car => car.CarId == id)); ;
@@ -78,6 +82,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails());;
         }
 
+        [CacheRemoveAspect("ICarService.Get")]
         public IResult Update(Car car)
         {
             if (car.DailyPrice > 0)
