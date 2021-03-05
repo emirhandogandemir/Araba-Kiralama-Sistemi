@@ -7,6 +7,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Aspects.Caching;
+using Core.Aspects.Transaction;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
@@ -32,6 +33,18 @@ namespace Business.Concrete
         {
             _carDao.Add(car);
             return new SuccessResult(Messages.CarAdded);
+        }
+        [TransactionScopeAspect]
+        public IResult AddTransactionalTest(Car car)
+        {
+            Add(car);
+            if(car.DailyPrice<10)
+            {
+                throw new Exception("");
+            }
+            Add(car);
+
+            return null;
         }
 
         public IResult Delete(Car car)
