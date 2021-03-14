@@ -51,7 +51,8 @@ namespace WebAPI
             //services.AddSingleton<IUserDao, EfUserDao>();
             //services.AddSingleton<IRentalService, RentalManager>();
             //services.AddSingleton<IRentalDao, EfRentalDao>();
-           
+
+            services.AddCors();
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
@@ -81,6 +82,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200/").AllowAnyHeader());
 
             app.UseHttpsRedirection();
 
