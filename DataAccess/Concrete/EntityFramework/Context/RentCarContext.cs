@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DataAccess.Concrete.EntityFramework
-{
+{ 
    public class RentCarContext :DbContext    
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
