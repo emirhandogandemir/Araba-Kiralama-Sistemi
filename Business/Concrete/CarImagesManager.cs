@@ -71,13 +71,17 @@ namespace Business.Concrete
             return new SuccessDataResult<List<CarImage>>(_carImageDao.GetAll());
         }
 
-        [ValidationAspect(typeof(CarImagesValidator))]
         public IDataResult<List<CarImage>> GetImagesByCarId(int id)
         {
-            return new SuccessDataResult<List<CarImage>>(CheckIfCarImageNull(id));
+            IResult result = BusinessRules.Run(CheckIfCarImageNull(id));
+            if (result != null)
+            {
+                return new ErrorDataResult<List<CarImage>>(result.Message);
+            }
+            return new SuccessDataResult<List<CarImage>>(CheckIfCarImageNull(id).Data);
         }
 
-       
+
 
         private IResult CheckImageLimitExceeded(int carid)
         {
@@ -89,15 +93,24 @@ namespace Business.Concrete
 
             return new SuccessResult();
         }
-        private List<CarImage> CheckIfCarImageNull(int id)
+        private IDataResult<List<CarImage>> CheckIfCarImageNull(int carId)
         {
-            string path = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory()).FullName + @"\Images\carImages\default.jpg");
-            var result = _carImageDao.GetAll(c => c.CarId == id).Any();
-            if (!result)
+            string path ="/images/default.jpg";
+            var result = _carImageDao.GetAll(c => c.CarId == carId).ToList();
+            if (result.Count==0)
             {
-                return new List<CarImage> { new CarImage { CarId = id, ImagePath = path, Date = DateTime.Now } };
+                List<CarImage> carImage = new List<CarImage>();
+                carImage.Add(new CarImage
+                {
+                    CarId = carId,
+                    Date = DateTime.Now,
+                    ImagePath = path,
+                }
+                    ); ;
+                return new SuccessDataResult<List<CarImage>>(carImage);
+
             }
-            return _carImageDao.GetAll(p => p.CarId == id);
+            return  new SuccessDataResult<List<CarImage>>(result);
         }
         private IResult CarImageDelete(CarImage carImage)
         {
@@ -112,6 +125,28 @@ namespace Business.Concrete
             }
 
             return new SuccessResult();
+        }
+
+        public IResult GetList(List<CarImage> list)
+        {
+            Console.WriteLine("\n------- Car Image List -------");
+
+            foreach (var img in list)
+            {
+                Console.WriteLine("{0}- Car ID: {1}\n    Image Path: {2}\n    CratedAt: {3}\n", img.Id, img.CarId, img.ImagePath, img.Date);
+            }
+            return new SuccessResult();
+        }
+
+        public IDataResult<CarImage> FindByID(int Id)
+        {
+            CarImage img = new CarImage();
+            if (_carImageDao.GetAll().Any(x => x.CarId == Id))
+            {
+                img = _carImageDao.GetAll().FirstOrDefault(x => x.CarId == Id);
+            }
+            else Console.WriteLine("No such car image was found.");
+            return new SuccessDataResult<CarImage>(img);
         }
     }
 }

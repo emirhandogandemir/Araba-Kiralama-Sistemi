@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Business.Abstract;
 using Business.BusinessAspects.Autofac;
@@ -90,9 +91,16 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDao.GetAll(car => car.ModelYear.Contains(year) == true)); ;
         }
 
-        public IDataResult<List<CarDetailDto>> GetCarDetails()
+     
+
+        public IDataResult<List<CarDetailDto>> GetCarDetails(int carId)
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails());;
+            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails(carId));
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetails2()
+        {
+            throw new NotImplementedException();
         }
 
         [CacheRemoveAspect("ICarService.Get")]
@@ -109,5 +117,8 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.CarPriceInValid);
             }
         }
+
+       
+        
     }
 }

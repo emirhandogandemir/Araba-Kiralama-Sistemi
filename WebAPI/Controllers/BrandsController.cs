@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Concrete;
+using System.Threading;
 
 namespace WebAPI.Controllers
 {
@@ -24,6 +25,7 @@ namespace WebAPI.Controllers
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
+           
             var result = _brandService.GetAll();
             if (result.Success)
             {

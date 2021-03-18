@@ -9,8 +9,12 @@ namespace Business.ValidationRules.FluentValidation
    public class RentalValidator : AbstractValidator<Rental>
     {
 
+        public RentalValidator()
+        {
+          
 
+        }
 
-
+        
     }
 }
