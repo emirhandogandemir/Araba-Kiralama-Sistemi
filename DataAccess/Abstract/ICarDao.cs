@@ -12,7 +12,7 @@ namespace DataAccess.Abstract
    {
         List<CarDetailDto> GetCarDetails(int carId);
 
-       
+        List<CarDetailDto> GetCarDetails2();
 
     }
 }
