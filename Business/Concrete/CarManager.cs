@@ -91,11 +91,19 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Car>>(_carDao.GetAll(car => car.ModelYear.Contains(year) == true)); ;
         }
 
-     
+        public IDataResult<List<CarDetailDto>> GetCarDetailByBrandId(int brandId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails3(c => c.BrandId == brandId));
+        }
+
+        public IDataResult<List<CarDetailDto>> GetCarDetailByColorId(int colorId)
+        {
+            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails3(c => c.ColorId == colorId));
+        }
 
         public IDataResult<List<CarDetailDto>> GetCarDetails(int carId)
         {
-            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails(carId));
+            return new SuccessDataResult<List<CarDetailDto>>(_carDao.GetCarDetails3(c=>c.CarId==carId));
         }
 
         public IDataResult<List<CarDetailDto>> GetCarDetails2()

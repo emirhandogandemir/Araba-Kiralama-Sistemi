@@ -44,9 +44,14 @@ namespace Business.Constants
         public static string CarImageUpdated = "Araba resmi başarı ile güncellendi";
         public static string CarImageDeleted = "Araba resmi başarı ile silindi";
         public static string CarImageListed = "Araba resimlerinin hepsi listelendi";
-        
-        
-        internal static object MaximumImageInCar;
+
+
+        public static object MaximumImageInCar;
        public static string AuthorizationDenied = "Yetkiniz yok";
+
+
+
+        public static string PaymentSuccess = "Ödeme başarılı";
+        public static string PaymentError = "Ödeme Başarısız";
     }
 }

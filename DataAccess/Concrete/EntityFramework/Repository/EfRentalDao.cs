@@ -30,9 +30,14 @@ namespace DataAccess.Concrete.EntityFramework.Repository
                         RentalId = r.RentalId,
                         CarName = c.CarName,
                         CompanyName = cu.CompanyName,
-                        UserName = u.FirstName + " " + u.LastName,
                         RentDate = r.RentDate,
-                        ReturnDate = r.ReturnDate
+                        ReturnDate = r.ReturnDate,
+                        CarId= c.CarId,
+                        CustomerId = cu.CustomerId,
+                        BrandName = b.BrandName,
+                        FirstName = cu.FirstName,
+                        LastName =cu.LastName,
+
                     };
                 return result.ToList();
             }
